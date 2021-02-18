@@ -2,6 +2,7 @@ package com.mzj.openGL.view
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
+import android.opengl.Matrix
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -10,46 +11,58 @@ import javax.microedition.khronos.opengles.GL10
 
 class MyGLRenderer : GLSurfaceView.Renderer {
 
-    val vertexData =
-            "attribute vec4 vPosition;" +
-            "void main() {" +
-            "    gl_Position = vPosition;" +
-            "}"
-
-    val fragmentData =
-            "precision mediump float;" +
-            "uniform vec4 vColor;" +
-            "void main() {" +
-            "    gl_FragColor = vColor;" +
-            "}"
-
     lateinit var vertexBuffer:FloatBuffer
-    var mProgram:Int = 0
+    lateinit var colorBuffer:FloatBuffer
 
+    private val vertexShaderCode =
+        "attribute vec4 vPosition;" +
+                "uniform mat4 vMatrix;" +
+                "varying  vec4 vColor;" +
+                "attribute vec4 aColor;" +
+                "void main() {" +
+                "  gl_Position = vMatrix*vPosition;" +
+                "  vColor=aColor;" +
+                "}"
+
+    private val fragmentShaderCode =
+        "precision mediump float;" +
+                "varying vec4 vColor;" +
+                "void main() {" +
+                "  gl_FragColor = vColor;" +
+                "}"
+
+    var mProgram:Int = 0
+    private val COORDS_PER_VERTEX = 3
     var triangleCoords = floatArrayOf(
         0.5f, 0.5f, 0.0f,  // top
         -0.5f, -0.5f, 0.0f,  // bottom left
         0.5f, -0.5f, 0.0f // bottom right
     )
 
-    var color = floatArrayOf(
-        1.0f, 1.0f, 1.0f, 1.0f
-    ) //白色
-
+    //矩阵句柄
+    var mMatrixHandler:Int = 0
     //顶点句柄
     var mPositionHandle:Int = 0
     //颜色句柄
     var mColorHandle:Int = 0
-    private val COORDS_PER_VERTEX = 3
 
+
+    //投影矩阵
+    private val mProjectionMatrix = FloatArray(16)
+    //相机矩阵
+    private val mViewMatrix = FloatArray(16)
+    //顶点矩阵
+    private val mMVPMatrix = FloatArray(16)
+
+    var colorArray = floatArrayOf(
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f
+    )
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        //设置清空颜色后所使用的颜色（黑色）
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
-
         //申请底层空间
-        val bb = ByteBuffer.allocateDirect(vertexData.length * 4)
+        val bb = ByteBuffer.allocateDirect(triangleCoords.size * 4)
         bb.order(ByteOrder.nativeOrder())
 
         //将坐标数据转换为FloatBuffer,用以传入给OpenGL ES程序
@@ -57,15 +70,24 @@ class MyGLRenderer : GLSurfaceView.Renderer {
         vertexBuffer.put(triangleCoords)
         vertexBuffer.position(0)
 
-        var vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexData)
-        var fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentData)
+
+        val dd = ByteBuffer.allocateDirect(colorArray.size * 4)
+        dd.order(ByteOrder.nativeOrder())
+
+        colorBuffer = dd.asFloatBuffer();
+        colorBuffer.put(colorArray)
+        colorBuffer.position(0)
+
+
+        val vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode)
+        val fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode)
 
         //创建一个空的OpenGLES程序
         mProgram  = GLES20.glCreateProgram();
         //将顶点着色器加入到程序
-        GLES20.glAttachShader(mProgram,vertexShader)
+        GLES20.glAttachShader(mProgram, vertexShader)
         //将片元着色器加入到程序中
-        GLES20.glAttachShader(mProgram,fragmentShader)
+        GLES20.glAttachShader(mProgram, fragmentShader)
         //连接到着色器程序
         GLES20.glLinkProgram(mProgram)
     }
@@ -73,30 +95,50 @@ class MyGLRenderer : GLSurfaceView.Renderer {
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         //设置窗口大小，前两个参数为左下角坐标，后两个参数为宽度和高度
         GLES20.glViewport(0, 0, width, height);
+
+        //计算宽高比
+        val ratio = width.toFloat() / height.toFloat()
+        //设置透视投影
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f)
+        //设置相机位置
+        Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        //计算变换矩阵
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0)
     }
 
     override fun onDrawFrame(gl: GL10?) {
+
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         GLES20.glUseProgram(mProgram)
 
+        //获取变换矩阵vMatrix成员句柄
+        mMatrixHandler = GLES20.glGetUniformLocation(mProgram, "vMatrix")
+        GLES20.glUniformMatrix4fv(mMatrixHandler, 1, false, mMVPMatrix, 0)
+
         //获取顶点着色器的vPosition成员句柄
-        mPositionHandle = GLES20.glGetAttribLocation(mProgram,"vPosition")
+        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition")
         //启用顶点句柄
         GLES20.glEnableVertexAttribArray(mPositionHandle)
         //准备三角形坐标数据
-        GLES20.glVertexAttribPointer(mPositionHandle,COORDS_PER_VERTEX,GLES20.GL_FLOAT,false,COORDS_PER_VERTEX * 4,vertexBuffer)
+        GLES20.glVertexAttribPointer(
+            mPositionHandle,
+            COORDS_PER_VERTEX,
+            GLES20.GL_FLOAT,
+            false,
+            COORDS_PER_VERTEX * 4,
+            vertexBuffer
+        )
 
-        //获取片元着色器的vColor成员的句柄
-        mColorHandle = GLES20.glGetUniformLocation(mProgram,"vColor")
-        //设置绘制三角形的颜色
-        GLES20.glUniform4fv(mColorHandle,1,color,0)
+        //获取片元着色器的aColor成员的句柄
+        mColorHandle = GLES20.glGetAttribLocation(mProgram, "aColor")
+        GLES20.glEnableVertexAttribArray(mColorHandle)
+        GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false, 0, colorBuffer)
 
         //绘制三角形
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES,0,triangleCoords.size / COORDS_PER_VERTEX)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, triangleCoords.size / COORDS_PER_VERTEX)
         //禁止顶点数组的句柄
         GLES20.glDisableVertexAttribArray(mPositionHandle)
-
     }
-
 
 
     fun loadShader(type: Int, shaderCode: String): Int {
