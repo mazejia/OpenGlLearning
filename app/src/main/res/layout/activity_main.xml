@@ -7,18 +7,30 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/tv_audio_video"
+        android:id="@+id/tv_chart"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:background="@android:color/darker_gray"
         android:gravity="center"
-        android:text="OpenGl Hello world"
+        android:text="绘制图形"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_texture"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/darker_gray"
+        android:gravity="center"
+        android:text="绘制纹理"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_chart" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
