@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_chart"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:background="@android:color/darker_gray"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/tv_texture"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:background="@android:color/darker_gray"
@@ -31,6 +31,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_chart" />
+
+    <TextView
+        android:id="@+id/tv_camera_opengl"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/darker_gray"
+        android:gravity="center"
+        android:text="相机（openGL）"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_texture" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

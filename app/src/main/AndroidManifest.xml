@@ -39,6 +39,11 @@
         <activity
             android:name=".TextureActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".CameraOpenGLActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>
