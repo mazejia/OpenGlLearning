@@ -45,5 +45,18 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_texture" />
 
+    <TextView
+        android:id="@+id/tv_fbo"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/darker_gray"
+        android:gravity="center"
+        android:text="FBO"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_camera_opengl" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

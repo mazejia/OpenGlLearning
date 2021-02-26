@@ -13,6 +13,8 @@ class MainActivity : Activity(),View.OnClickListener {
     private lateinit var textureView: View
     //相机openGL
     private lateinit var cameraOpenGL:View
+    //FBO
+    private lateinit var fbo:View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +27,14 @@ class MainActivity : Activity(),View.OnClickListener {
         chartView = findViewById(R.id.tv_chart)
         textureView = findViewById(R.id.tv_texture)
         cameraOpenGL = findViewById(R.id.tv_camera_opengl)
+        fbo = findViewById(R.id.tv_fbo)
     }
 
     private fun initData(){
         chartView.setOnClickListener(this)
         textureView.setOnClickListener(this)
         cameraOpenGL.setOnClickListener(this)
+        fbo.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -42,6 +46,9 @@ class MainActivity : Activity(),View.OnClickListener {
             startActivity(intent)
         } else if(v == cameraOpenGL){
             val intent = Intent(MainActivity@this,CameraOpenGLActivity::class.java)
+            startActivity(intent)
+        } else if(v == fbo){
+            val intent = Intent(MainActivity@this,FBOActivity::class.java)
             startActivity(intent)
         }
     }

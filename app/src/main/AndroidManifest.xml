@@ -44,6 +44,10 @@
             android:name=".CameraOpenGLActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".FBOActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

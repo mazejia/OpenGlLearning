@@ -26,6 +26,7 @@ class OpenGLCameraView:GLSurfaceView,GLSurfaceView.Renderer {
     }
 
     private fun init() {
+        //第一步，设置版本，渲染render模式，初始化相机、相机绘制类
         setEGLContextClientVersion(2)
         setRenderer(this)
         renderMode = RENDERMODE_WHEN_DIRTY
@@ -39,6 +40,7 @@ class OpenGLCameraView:GLSurfaceView,GLSurfaceView.Renderer {
             mRunnable!!.run()
             mRunnable = null
         }
+        //第二部，打开相机，设置纹理，显示预览
         mCamera2!!.open(cameraId)
         mCameraDrawer!!.setCameraId(cameraId)
         val point = mCamera2!!.getPreviewSize()
