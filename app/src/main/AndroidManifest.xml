@@ -48,6 +48,10 @@
             android:name=".FBOActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".LightActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

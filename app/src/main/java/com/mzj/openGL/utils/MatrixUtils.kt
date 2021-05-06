@@ -196,6 +196,11 @@ object MatrixUtils {
         return m
     }
 
+    @JvmName("getOriginalMatrix1")
+    fun getOriginalMatrix(): FloatArray {
+        return floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
+    }
+
     @JvmStatic
     val originalMatrix: FloatArray
         get() = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)

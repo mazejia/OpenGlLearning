@@ -15,6 +15,8 @@ class MainActivity : Activity(),View.OnClickListener {
     private lateinit var cameraOpenGL:View
     //FBO
     private lateinit var fbo:View
+    //光照
+    private lateinit var light:View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,7 @@ class MainActivity : Activity(),View.OnClickListener {
         textureView = findViewById(R.id.tv_texture)
         cameraOpenGL = findViewById(R.id.tv_camera_opengl)
         fbo = findViewById(R.id.tv_fbo)
+        light = findViewById(R.id.tv_light)
     }
 
     private fun initData(){
@@ -35,21 +38,31 @@ class MainActivity : Activity(),View.OnClickListener {
         textureView.setOnClickListener(this)
         cameraOpenGL.setOnClickListener(this)
         fbo.setOnClickListener(this)
+        light.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
-        if(v == chartView){
-            val intent = Intent(MainActivity@this,ChartActivity::class.java)
-            startActivity(intent)
-        } else if(v == textureView){
-            val intent = Intent(MainActivity@this,TextureActivity::class.java)
-            startActivity(intent)
-        } else if(v == cameraOpenGL){
-            val intent = Intent(MainActivity@this,CameraOpenGLActivity::class.java)
-            startActivity(intent)
-        } else if(v == fbo){
-            val intent = Intent(MainActivity@this,FBOActivity::class.java)
-            startActivity(intent)
+        when (v) {
+            chartView -> {
+                val intent = Intent(MainActivity@this,ChartActivity::class.java)
+                startActivity(intent)
+            }
+            textureView -> {
+                val intent = Intent(MainActivity@this,TextureActivity::class.java)
+                startActivity(intent)
+            }
+            cameraOpenGL -> {
+                val intent = Intent(MainActivity@this,CameraOpenGLActivity::class.java)
+                startActivity(intent)
+            }
+            fbo -> {
+                val intent = Intent(MainActivity@this,FBOActivity::class.java)
+                startActivity(intent)
+            }
+            light -> {
+                val intent = Intent(this,LightActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
