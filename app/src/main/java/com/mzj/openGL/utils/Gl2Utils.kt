@@ -1,7 +1,10 @@
 package com.mzj.openGL.utils
 
+import android.content.Context
 import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.opengl.GLES20
+import android.opengl.GLUtils
 import android.opengl.Matrix
 import android.util.Log
 
@@ -251,5 +254,47 @@ object Gl2Utils {
         if (DEBUG && code != 0) {
             Log.e(TAG, "glError:$code---$index")
         }
+    }
+
+    fun loadTextureFromRes(resources: Resources,resId: Int): Int {
+        //创建纹理对象
+        val textureId = IntArray(1)
+        //生成纹理：纹理数量、保存纹理的数组，数组偏移量
+        GLES20.glGenTextures(1, textureId, 0)
+        if (textureId[0] == 0) {
+            Log.e(TAG, "创建纹理对象失败")
+        }
+        //原尺寸加载位图资源（禁止缩放）
+        val options = BitmapFactory.Options()
+        options.inScaled = false
+        val bitmap = BitmapFactory.decodeResource(
+            resources,resId,options
+        )
+        if (bitmap == null) {
+            //删除纹理对象
+            GLES20.glDeleteTextures(1, textureId, 0)
+            Log.e(TAG, "加载位图失败")
+        }
+        //绑定纹理到opengl
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId[0])
+        //设置放大、缩小时的纹理过滤方式，必须设定，否则纹理全黑
+        GLES20.glTexParameterf(
+            GLES20.GL_TEXTURE_2D,
+            GLES20.GL_TEXTURE_MIN_FILTER,
+            GLES20.GL_NEAREST.toFloat()
+        )
+        GLES20.glTexParameterf(
+            GLES20.GL_TEXTURE_2D,
+            GLES20.GL_TEXTURE_MAG_FILTER,
+            GLES20.GL_NEAREST.toFloat()
+        )
+        //将位图加载到opengl中，并复制到当前绑定的纹理对象上
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0)
+        //释放bitmap资源（上面已经把bitmap的数据复制到纹理上了）
+        bitmap!!.recycle()
+        //解绑当前纹理，防止其他地方以外改变该纹理
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
+        //返回纹理对象
+        return textureId[0]
     }
 }

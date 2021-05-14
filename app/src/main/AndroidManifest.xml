@@ -52,6 +52,10 @@
             android:name=".LightActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".CameraFilterActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

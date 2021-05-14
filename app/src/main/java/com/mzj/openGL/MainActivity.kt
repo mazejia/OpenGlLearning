@@ -17,6 +17,8 @@ class MainActivity : Activity(),View.OnClickListener {
     private lateinit var fbo:View
     //光照
     private lateinit var light:View
+    //相机滤镜
+    private lateinit var cameraFilter:View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,7 @@ class MainActivity : Activity(),View.OnClickListener {
         cameraOpenGL = findViewById(R.id.tv_camera_opengl)
         fbo = findViewById(R.id.tv_fbo)
         light = findViewById(R.id.tv_light)
+        cameraFilter = findViewById(R.id.tv_camera_filter)
     }
 
     private fun initData(){
@@ -39,6 +42,7 @@ class MainActivity : Activity(),View.OnClickListener {
         cameraOpenGL.setOnClickListener(this)
         fbo.setOnClickListener(this)
         light.setOnClickListener(this)
+        cameraFilter.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -61,6 +65,10 @@ class MainActivity : Activity(),View.OnClickListener {
             }
             light -> {
                 val intent = Intent(this,LightActivity::class.java)
+                startActivity(intent)
+            }
+            cameraFilter -> {
+                val intent = Intent(this,CameraFilterActivity::class.java)
                 startActivity(intent)
             }
         }
