@@ -48,19 +48,19 @@ class MainActivity : Activity(),View.OnClickListener {
     override fun onClick(v: View) {
         when (v) {
             chartView -> {
-                val intent = Intent(MainActivity@this,ChartActivity::class.java)
+                val intent = Intent(this,ChartActivity::class.java)
                 startActivity(intent)
             }
             textureView -> {
-                val intent = Intent(MainActivity@this,TextureActivity::class.java)
+                val intent = Intent(this,TextureActivity::class.java)
                 startActivity(intent)
             }
             cameraOpenGL -> {
-                val intent = Intent(MainActivity@this,CameraOpenGLActivity::class.java)
+                val intent = Intent(this,CameraOpenGLActivity::class.java)
                 startActivity(intent)
             }
             fbo -> {
-                val intent = Intent(MainActivity@this,FBOActivity::class.java)
+                val intent = Intent(this,FBOActivity::class.java)
                 startActivity(intent)
             }
             light -> {

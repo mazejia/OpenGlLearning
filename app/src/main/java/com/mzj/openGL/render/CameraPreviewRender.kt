@@ -27,8 +27,8 @@ class CameraPreviewRender : GLSurfaceView.Renderer {
     var height:Int = 0
     var exportFrame = IntArray(1)
     var exportTexture = IntArray(1)
-    var cameraFilter: CameraFilter? = null
-    var colorFilter: ColorFilter? = null
+    var cameraFilter: CameraFilter
+    var colorFilter: ColorFilter
 
     constructor(res:Resources){
         cameraFilter = CameraFilter(res)
@@ -72,10 +72,10 @@ class CameraPreviewRender : GLSurfaceView.Renderer {
         createTexture()
         surfaceTexture = SurfaceTexture(cameraTexture[0])
 
-        cameraFilter!!.onSurfaceCreated()
-        colorFilter!!.onSurfaceCreated()
-        matrix = MatrixUtils.flip(colorFilter!!.getMatrix(), false, true)
-        colorFilter!!.setMatrix(matrix)
+        cameraFilter.onSurfaceCreated()
+        colorFilter.onSurfaceCreated()
+        matrix = MatrixUtils.flip(colorFilter.getMatrix(), false, true)
+        colorFilter.setMatrix(matrix)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -83,8 +83,8 @@ class CameraPreviewRender : GLSurfaceView.Renderer {
             this.width = width;
             this.height = height;
 
-            cameraFilter!!.onSurfaceChanged(width, height)
-            colorFilter!!.onSurfaceChanged(width, height)
+            cameraFilter.onSurfaceChanged(width, height)
+            colorFilter.onSurfaceChanged(width, height)
             delFrameBufferAndTexture()
             genFrameBufferAndTexture()
         }
@@ -96,31 +96,25 @@ class CameraPreviewRender : GLSurfaceView.Renderer {
             surfaceTexture!!.updateTexImage()
         }
 
-        cameraFilter!!.setTextureId(cameraTexture)
-        cameraFilter!!.onDraw()
+        cameraFilter.setTextureId(cameraTexture)
+        cameraFilter.onDraw()
 
-        colorFilter!!.setTextureId(cameraFilter!!.getOutputTextureId())
+        colorFilter.setTextureId(cameraFilter.getOutputTextureId())
 
         if (isTakingPhoto()) {
             val exportBuffer = ByteBuffer.allocate(width * height * 4)
             bindFrameBufferAndTexture()
-            colorFilter!!.setMatrix(MatrixUtils.flip(matrix, false, true))
-            colorFilter!!.onDraw()
-            GLES20.glReadPixels(
-                0,
-                0,
-                width,
-                height,
-                GLES20.GL_RGBA,
-                GLES20.GL_UNSIGNED_BYTE,
+            colorFilter.setMatrix(MatrixUtils.flip(matrix, false, true))
+            colorFilter.onDraw()
+            GLES20.glReadPixels(0,0,width,height,GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,
                 exportBuffer
             )
             savePhoto(exportBuffer)
             unBindFrameBuffer()
             setTakingPhoto(false)
-            colorFilter!!.setMatrix(MatrixUtils.flip(matrix, false, true))
+            colorFilter.setMatrix(MatrixUtils.flip(matrix, false, true))
         } else {
-            colorFilter!!.onDraw()
+            colorFilter.onDraw()
         }
     }
     fun delFrameBufferAndTexture() {
