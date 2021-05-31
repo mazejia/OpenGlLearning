@@ -5,6 +5,8 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import com.mzj.openGL.utils.PermissionUtils
 import com.mzj.openGL.view.OpenGLCameraView
@@ -12,9 +14,13 @@ import com.mzj.openGL.view.OpenGLCameraView
 /**
  * 相机（openGL）
  */
-class CameraOpenGLActivity : Activity() {
+class CameraOpenGLActivity : Activity(),View.OnClickListener {
 
     private lateinit var mCameraView: OpenGLCameraView
+    private lateinit var mGrayView:Button
+    private lateinit var mBlackWhiteView:Button
+    private lateinit var mReverseView:Button
+    private lateinit var mResetView:Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +36,14 @@ class CameraOpenGLActivity : Activity() {
     private var initViewRunnable = Runnable {
         setContentView(R.layout.activity_camera)
         mCameraView = findViewById(R.id.mCameraView)
+        mGrayView = findViewById(R.id.tv_filter_gray)
+        mBlackWhiteView = findViewById(R.id.tv_filter_black_white)
+        mReverseView = findViewById(R.id.tv_filter_reverse)
+        mResetView = findViewById(R.id.tv_filter_reset)
+        mGrayView.setOnClickListener(this)
+        mBlackWhiteView.setOnClickListener(this)
+        mReverseView.setOnClickListener(this)
+        mResetView.setOnClickListener(this)
     }
 
     override fun onRequestPermissionsResult(
@@ -68,6 +82,23 @@ class CameraOpenGLActivity : Activity() {
             mCameraView.switchCamera()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            mGrayView -> {
+                mCameraView.setGrayFilter()
+            }
+            mBlackWhiteView -> {
+                mCameraView.setBlackWhiteFilter()
+            }
+            mReverseView -> {
+                mCameraView.setReverseFilter()
+            }
+            mResetView -> {
+                mCameraView.resetFilter()
+            }
+        }
     }
 
 }

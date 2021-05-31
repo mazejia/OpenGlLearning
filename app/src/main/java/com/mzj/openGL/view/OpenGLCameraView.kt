@@ -11,7 +11,7 @@ import javax.microedition.khronos.opengles.GL10
 
 class OpenGLCameraView:GLSurfaceView,GLSurfaceView.Renderer {
     private var mCamera2: KitkatCamera? = null
-    private var mCameraDrawer: CameraDrawer? = null
+    private lateinit var mCameraDrawer: CameraDrawer
     private var cameraId = 1
 
     private var mRunnable: Runnable? = null
@@ -35,18 +35,18 @@ class OpenGLCameraView:GLSurfaceView,GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        mCameraDrawer!!.onSurfaceCreated(gl, config)
+        mCameraDrawer.onSurfaceCreated(gl, config)
         if (mRunnable != null) {
             mRunnable!!.run()
             mRunnable = null
         }
         //第二部，打开相机，设置纹理，显示预览
         mCamera2!!.open(cameraId)
-        mCameraDrawer!!.setCameraId(cameraId)
+        mCameraDrawer.setCameraId(cameraId)
         val point = mCamera2!!.getPreviewSize()
-        mCameraDrawer!!.setDataSize(point.x, point.y)
-        mCamera2!!.setPreviewTexture(mCameraDrawer!!.getSurfaceTexture())
-        mCameraDrawer!!.getSurfaceTexture().setOnFrameAvailableListener { requestRender() }
+        mCameraDrawer.setDataSize(point.x, point.y)
+        mCamera2!!.setPreviewTexture(mCameraDrawer.getSurfaceTexture())
+        mCameraDrawer.getSurfaceTexture().setOnFrameAvailableListener { requestRender() }
         mCamera2!!.preview()
     }
 
@@ -60,16 +60,32 @@ class OpenGLCameraView:GLSurfaceView,GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        mCameraDrawer!!.setViewSize(width, height)
+        mCameraDrawer.setViewSize(width, height)
         GLES20.glViewport(0, 0, width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        mCameraDrawer!!.onDrawFrame(gl)
+        mCameraDrawer.onDrawFrame(gl)
     }
 
     override fun onPause() {
         super.onPause()
         mCamera2!!.close()
+    }
+
+    fun setGrayFilter(){
+        mCameraDrawer.setGrayFilter()
+    }
+
+    fun setBlackWhiteFilter(){
+        mCameraDrawer.setBlackWhiteFilter()
+    }
+
+    fun setReverseFilter(){
+        mCameraDrawer.setReverseFilter()
+    }
+
+    fun resetFilter(){
+        mCameraDrawer.resetFilter()
     }
 }

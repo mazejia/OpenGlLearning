@@ -18,7 +18,7 @@ class CameraDrawer : GLSurfaceView.Renderer {
     private var height = 0
     private var dataWidth = 0
     private var dataHeight = 0
-    private var mOesFilter: AFilter
+    private var mOesFilter: OesFilter
     private var cameraId = 1
 
     public constructor(res: Resources){
@@ -71,6 +71,23 @@ class CameraDrawer : GLSurfaceView.Renderer {
     override fun onDrawFrame(gl: GL10?) {
         surfaceTexture.updateTexImage()
         mOesFilter.draw()
+    }
+
+
+    fun setGrayFilter(){
+        mOesFilter.setGrayFilter()
+    }
+
+    fun setBlackWhiteFilter(){
+        mOesFilter.setBlackWhiteFilter()
+    }
+
+    fun setReverseFilter(){
+        mOesFilter.setReverseFilter()
+    }
+
+    fun resetFilter(){
+        mOesFilter.resetFilter()
     }
 
     private fun createTextureID():Int{

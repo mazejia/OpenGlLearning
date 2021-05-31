@@ -7,4 +7,45 @@
         android:id="@+id/mCameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+    <Button
+        android:id="@+id/tv_filter_gray"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="灰度图"
+        android:layout_marginLeft="5dp"/>
+
+    <Button
+        android:id="@+id/tv_filter_black_white"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="黑白图"
+        android:layout_toRightOf="@id/tv_filter_gray"
+        android:layout_marginLeft="5dp"/>
+
+    <Button
+        android:id="@+id/tv_filter_reverse"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="反转图"
+        android:layout_toRightOf="@id/tv_filter_black_white"
+        android:layout_marginLeft="5dp"/>
+
+    <Button
+        android:id="@+id/tv_filter_reset"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="还原"
+        android:layout_toRightOf="@id/tv_filter_reverse"
+        android:layout_marginLeft="5dp"/>
+
 </RelativeLayout>
